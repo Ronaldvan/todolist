@@ -1,23 +1,23 @@
 import { createApp } from 'vue';
 import App from './App.vue';
-import Login from './Login.vue';
-import SignUp from './SignUp.vue';
-import router from './router/router.js'; // Make sure this imports your Vue Router configuration correctly
-import { Auth0Plugin } from './plugins_auth0.js'; // Make sure this is the correct import from the Auth0 SDK
+import router from './router/router.js'; // Adjust the import if necessary
+import { Auth0Plugin, initializeAuth0 } from './plugins_auth0.js';
 
+// Auth0 client options
+const auth0Options = {
+  domain: 'dev-4wxpi680juv4b7fh.us.auth0.com',
+  clientId: 'VRGUbvKBdKn1yOpuacctKI4o1NohplII',
+  
+};
 
-// Create a new Vue application with the App component
-const app = createApp(App);
+// Initialize Auth0 before creating the app
+initializeAuth0(auth0Options).then(() => {
+  const app = createApp(App);
 
-// Use the Vue Router plugin
-app.use(router);
+  app.use(router);
+  app.use(Auth0Plugin);
 
-// Use the Auth0 plugin with the provided options
-app.use(Auth0Plugin, {
-    domain: 'dev-4wxpi680juv4b7fh.us.auth0.com',
-    clientId: 'i7Re7yxrmFswTXNgTn7hc6uUA3kECFnF',
-    // ... other Auth0 options ...
-  });
-
-// Mount the Vue application to the DOM
-app.mount('#app');
+  app.mount('#app');
+}).catch(error => {
+  console.error('Auth0 client initialization failed:', error);
+});

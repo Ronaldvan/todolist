@@ -1,14 +1,14 @@
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue'
-
+import { ref, onMounted, computed, watch } from 'vue';
 import { useAuth0 } from '@auth0/auth0-vue';
-const { isAuthenticated, loginWithRedirect, login } = useAuth0();
 
-const todos = ref([])
-const name = ref('')
+const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
 
-const input_content = ref('')
-const input_category = ref(null)
+const todos = ref([]);
+const name = ref(localStorage.getItem('name') || '');
+
+const input_content = ref('');
+const input_category = ref(null);
 
 const todos_asc = computed(() => todos.value.sort((a, b) => {
   return b.createdAt - a.createdAt
@@ -42,14 +42,19 @@ watch(name, (newVal) => {
   localStorage.setItem('name', newVal)
 })
 
+// This is called on component mount
 onMounted(async () => {
-  name.value = localStorage.getItem('name') || '';
-  if (!await isAuthenticated.value) {
+  if (!(await isAuthenticated.value)) {
     await loginWithRedirect();
   }
 });
 
-
+// Define the logout function
+const onLogout = () => {
+  logout({
+    returnTo: window.location.origin,
+  });
+};
 
 </script>
 
@@ -117,7 +122,7 @@ onMounted(async () => {
       </div>
     </section>
   </main>
-  <button @click="logout">Logout</button>
+  <button @click="onLogout">Logout</button>
 </div>
 
 </template>
