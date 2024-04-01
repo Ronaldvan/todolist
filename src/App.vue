@@ -2,7 +2,7 @@
 import { ref, onMounted, computed, watch } from 'vue'
 
 import { useAuth0 } from '@auth0/auth0-vue';
-const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
+const { isAuthenticated, loginWithRedirect, login } = useAuth0();
 
 const todos = ref([])
 const name = ref('')
@@ -119,13 +119,5 @@ onMounted(async () => {
   </main>
   <button @click="logout">Logout</button>
 </div>
-
-<div v-else>
-    <button @click="loginWithRedirect">Login</button>
-  </div>
-
-<div id="app-router">
-    <router-view></router-view>
-  </div>
 
 </template>
