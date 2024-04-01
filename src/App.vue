@@ -1,6 +1,9 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue'
 
+import { useAuth0 } from '@auth0/auth0-vue';
+const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
+
 const todos = ref([])
 const name = ref('')
 
@@ -42,9 +45,19 @@ watch(name, (newVal) => {
 onMounted(() => {
   name.value = localStorage.getItem('name') || ''
 })
+
+onMounted(() => {
+  if (!isAuthenticated.value) {
+    loginWithRedirect();
+  }
+});
+
+
 </script>
 
 <template>
+
+  <div v-if="isAuthenticated">
 
   <main class="app">
 
@@ -106,5 +119,11 @@ onMounted(() => {
       </div>
     </section>
   </main>
+  <button @click="logout">Logout</button>
+</div>
+
+<div v-else>
+    <button @click="loginWithRedirect">Login</button>
+  </div>
 
 </template>
