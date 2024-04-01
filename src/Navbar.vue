@@ -7,30 +7,27 @@
   </template>
   
   <script>
-  export default {
-    name: 'Navbar',
-    data() {
-      return {
-        isAuthenticated: false
-      };
-    },
-    async created() {
-      this.isAuthenticated = await this.$auth.isAuthenticated();
-    },
-    methods: {
-      async login() {
-        await this.$auth.loginWithRedirect();
-      },
-      logout() {
-        this.$auth.logout({
-          returnTo: window.location.origin
-        });
-      }
-    }
-  }
+import { computed } from 'vue';
+import { useAuth0 } from '@auth0/auth0-vue';
+
+export default {
+  name: 'Navbar',
+  setup() {
+    const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
+    
+    return {
+      isAuthenticated: computed(() => isAuthenticated.value),
+      login: loginWithRedirect,
+      logout,
+    };
+  },
+};
+
+  
   </script>
   
   <style>
   /* Your CSS styling */
   </style>
+  
   

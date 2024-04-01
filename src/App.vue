@@ -42,15 +42,13 @@ watch(name, (newVal) => {
   localStorage.setItem('name', newVal)
 })
 
-onMounted(() => {
-  name.value = localStorage.getItem('name') || ''
-})
-
-onMounted(() => {
-  if (!isAuthenticated.value) {
-    loginWithRedirect();
+onMounted(async () => {
+  name.value = localStorage.getItem('name') || '';
+  if (!await isAuthenticated.value) {
+    await loginWithRedirect();
   }
 });
+
 
 
 </script>
@@ -124,6 +122,10 @@ onMounted(() => {
 
 <div v-else>
     <button @click="loginWithRedirect">Login</button>
+  </div>
+
+<div id="app-router">
+    <router-view></router-view>
   </div>
 
 </template>
